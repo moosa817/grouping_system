@@ -1,5 +1,4 @@
 # Grouping System 
-### Video Demo: https://youtu.be/ncV6sDrcKRs
 ### Description:
 Welcome to the Grouping System! This Python program facilitates the creation of groups based on the qualities of students. It takes input from a JSON file containing information about students, such as their roll number and qualities. The program allows customization, allowing you to specify the group size and the qualities students possess.
 
