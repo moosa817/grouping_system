@@ -1,5 +1,4 @@
-GROUP_SIZE = 6
-STUDENT_QUALITIES_LIMIT = 3
+GROUP_SIZE = 5
 INPUT_FILE = "students.json"
 QUALITIES = [
     "Teamwork",
