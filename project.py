@@ -23,7 +23,8 @@ def main():
     final_groups = make_groups(groups, students_list)
 
     # prints everything in tabular form
-    print_result(final_groups, read_json(config.INPUT_FILE), students_list)
+    student_info_list = read_json(config.INPUT_FILE)
+    print_result(final_groups, student_info_list)
 
 
 def print_info():
@@ -89,13 +90,17 @@ def get_student(quality, students_list):
                     if len(student["qualities"]) > 1:
                         continue
 
-                    return student
+                return student
         iteration += 1
 
 
 def make_groups(groups, students_list):
-    for i, group in enumerate(groups):
-        for quality in group["Qualities"]:
+    for i in range(len(groups)):
+        for no in range(config.GROUP_SIZE):
+            if no < len(config.QUALITIES):
+                quality = config.QUALITIES[no]
+            else:
+                quality = random.choice(config.QUALITIES)
             if get_student(quality, students_list):
                 student = get_student(quality, students_list)
                 groups[i]["group_members"].append(student["roll_no"])
@@ -109,22 +114,41 @@ def make_groups(groups, students_list):
     return groups
 
 
-def print_result(groups, students_list, rem_students):
-    print("\n\n")
-    print(f"Total Students : {len(students_list)}")
+from tabulate import tabulate
+
+
+def print_result(groups, students_list):
+    print(f"\n\nTotal Students : {len(students_list)}")
     for i in groups:
-        a = []
+        memebers_info = []
+        n = 0
         for j in i["group_members"]:
             for student in students_list:
                 if student["roll_no"] == j:
-                    a.append([j, student["qualities"]])
+                    if n < len(i["Qualities"]):
+                        quality, count = list(i["Qualities"].items())[n]
+                        skill = f"{quality}:{count}"
+                        n += 1
+                    else:
+                        skill = ""
 
-        print(f"Group {i['id']}, Total Members: {len(a)}")
-        print(tabulate(a, headers=["Roll No", "Qualities"], tablefmt="grid"))
+                    memebers_info.append(
+                        [
+                            j,
+                            student["qualities"],
+                            skill,
+                        ]
+                    )
+
+        print(f"Group {i['id']}, Total Members: {len(memebers_info)}")
+        print(
+            tabulate(
+                memebers_info,
+                headers=["Roll No", "Qualities", "Quality Count"],
+                tablefmt="grid",
+            )
+        )
         print()
-
-    for i in rem_students:
-        print(f"Left out Members are {i}")
 
 
 if __name__ == "__main__":
